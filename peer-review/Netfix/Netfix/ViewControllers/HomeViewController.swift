@@ -22,7 +22,7 @@ class HomeViewController: UIViewController {
     }
 
     private func fetchMovies() {
-        viewModel.fetchUsers { [weak self] result in
+        viewModel.fetchUsers { [weak self] in
             guard let self else { return }
             movies = viewModel.movies
             
@@ -34,15 +34,23 @@ class HomeViewController: UIViewController {
 
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.frame.width - 30, height: 160)
-        layout.sectionInset = UIEdgeInsets(top: 40, left: 15, bottom: 20, right: 15)
-        
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        layout.itemSize = CGSize(width: 150, height: 265)
+        layout.sectionInset = UIEdgeInsets(top: 80, left: 15, bottom: 20, right: 15)
+        layout.scrollDirection = .horizontal
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: "MovieCell")
         collectionView.backgroundColor = .systemBackground
         view.addSubview(collectionView)
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.heightAnchor.constraint(equalToConstant: 350)
+        ])
     }
 }
 
@@ -53,6 +61,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath) as! MovieCell
+        cell.titleLabel.text = viewModel.movies[indexPath.item].title
+        cell.subtitleLabel.text = viewModel.movies[indexPath.item].releaseDate
         return cell
     }
 
@@ -61,9 +71,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         
         let detailVC = MovieDetailViewController()
         
-        navigationController?.pushViewController(detailVC, animated: true)
-        
-        detailVC.titleLabel.text = movie.title
+        present(detailVC, animated: true)
+        detailVC.movieId = movie.id
     }
 }
 
