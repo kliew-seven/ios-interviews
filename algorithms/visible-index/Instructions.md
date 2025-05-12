@@ -2,7 +2,7 @@
 
 ### Scenario
 
-<img src="assets/home.png" width="200"/>
+<img src="assets/home.png" width="250"/>
 
 You're implementing a component (`Shelf`) for the horizontal scrolling of `Trending` show thumbnails on the 7plus homepage. Each shelf item could have variable width. To maintain performance, you want to calculate which items are visible given a scroll offset and viewport width.
 
