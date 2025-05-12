@@ -5,28 +5,29 @@
 //  Created by Craig Martin on 12/5/2025.
 //
 
+import Kingfisher
 import UIKit
 
 class MovieCell: UICollectionViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = .white
-        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .black
         return label
     }()
     
     let subtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .white
+        label.textColor = .systemGray2
         return label
     }()
     
     let imageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
@@ -40,25 +41,40 @@ class MovieCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func configure(with movie: Movie) {
+        guard let imageURL = URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)") else { return }
+        titleLabel.text = movie.title
+        subtitleLabel.text = movie.releaseDate
+        imageView.kf.setImage(with: imageURL)
+    }
 
     private func setupUI() {
-        self.backgroundColor = .red
+        contentView.clipsToBounds = true
+        contentView.layer.cornerRadius = 12
+        contentView.backgroundColor = .systemGray6
         
-        addSubview(imageView)
-        addSubview(titleLabel)
-        addSubview(subtitleLabel)
+        contentView.addSubview(imageView)
         
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            
-            subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 190),
         ])
+        
+        contentView.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 12),
+        ])
+        
+//        contentView.addSubview(subtitleLabel)
+//        
+//        NSLayoutConstraint.activate([
+//            subtitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+//            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6),
+//        ])
     }
 }
