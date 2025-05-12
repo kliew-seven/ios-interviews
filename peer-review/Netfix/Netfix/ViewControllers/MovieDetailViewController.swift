@@ -38,6 +38,7 @@ class MovieDetailViewController: UIViewController {
         super.viewDidLoad()
 
         setupViews()
+        getMovieDetail()
     }
     
     private func setupViews() {
@@ -56,4 +57,27 @@ class MovieDetailViewController: UIViewController {
         ])
     }
     
+    private func getMovieDetail() {
+        NetworkManager.shared.fetchMovieDetail(id: movieId) { [weak self] result in
+            switch result {
+            case .success(let movieDetail):
+                self?.movie = movieDetail
+                
+                DispatchQueue.main.async {
+                    self?.updateUI()
+                }
+                
+            case .failure(let error):
+                print("Error fetching user detail: \(error)")
+            }
+        }
+    }
+    
+    private func updateUI() {
+        guard let movie else { return }
+        
+        titleLabel.text = movie.title
+        descriptionLabel.text = movie.description
+        releaseDateLabel.text = movie.releaseDate
+    }
 }
