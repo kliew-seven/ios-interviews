@@ -71,8 +71,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         
         let detailVC = MovieDetailViewController()
         
-        present(detailVC, animated: true)
         detailVC.movieId = movie.id
+        present(detailVC, animated: true)
     }
 }
 
